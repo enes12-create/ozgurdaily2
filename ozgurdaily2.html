@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Özgür Daily</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface2: #f2f2f7;
+  --surface3: #e5e5ea;
+  --border: rgba(0,0,0,0.09);
+  --border2: rgba(0,0,0,0.16);
+  --text: #1c1c1e;
+  --text2: #636366;
+  --text3: #aeaeb2;
+  --accent: #c0392b;
+  --accent-light: rgba(192,57,43,0.09);
+  --dot-de: #2c7be5;
+  --dot-tr: #c026d3;
+  --dot-ev: #d97706;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --shadow: 0 2px 16px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.05);
+  --r: 12px;
+  --sidebar: 68px;
+  --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-theme="dark"] {
+  --bg: #000000;
+  --surface: #1c1c1e;
+  --surface2: #2c2c2e;
+  --surface3: #3a3a3c;
+  --border: rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.18);
+  --text: #f5f5f7;
+  --text2: #8e8e93;
+  --text3: #48484a;
+  --accent: #ff453a;
+  --accent-light: rgba(255,69,58,0.12);
+  --dot-de: #4d9fff;
+  --dot-tr: #da8fff;
+  --dot-ev: #ffd60a;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.3);
+  --shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0 20px;
+  background: var(--surface);
+  border-right: 0.5px solid var(--border2);
+  flex-shrink: 0;
+  z-index: 20;
+  gap: 0;
+}
+
+/* App name as logo — Times New Roman, rotated */
+.app-name {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  user-select: none;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.15s;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+
+.nav-btn:hover { background: var(--surface2); color: var(--text2); }
+.nav-btn.active { background: var(--accent-light); color: var(--accent); }
+
+.nav-btn svg {
+  width: 21px; height: 21px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  right: -1px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 18px;
+  border-radius: 2px 0 0 2px;
+  background: var(--accent);
+}
+
+/* ─── MAIN ─── */
+.main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+.section { display: none; flex: 1; overflow: hidden; animation: fadeUp 0.2s ease; }
+.section.active { display: flex; flex-direction: column; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px 12px;
+  border-bottom: 0.5px solid var(--border2);
+  background: var(--surface);
+  flex-shrink: 0;
+  min-height: 52px;
+}
+
+.topbar-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 18px; font-weight: 400;
+  color: var(--text); letter-spacing: -0.01em;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.pill-btn {
+  background: none; border: 0.5px solid var(--border2);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 13px; color: var(--text2);
+  cursor: pointer; font-family: var(--font);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.pill-btn:hover { background: var(--surface2); color: var(--text); }
+
+.topbar-meta { font-size: 12px; color: var(--text3); }
+
+/* ═══════════════════════════════
+   CALENDAR — Apple-style
+═══════════════════════════════ */
+.cal-outer {
+  flex: 1; overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 0;
+}
+
+.cal-nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px 10px;
+  background: var(--surface);
+  border-bottom: 0.5px solid var(--border);
+  flex-shrink: 0;
+}
+
+.cal-month-label {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 22px; font-weight: 400;
+  color: var(--text); letter-spacing: -0.02em;
+}
+
+.cal-arrow-group { display: flex; gap: 2px; }
+
+.cal-arrow {
+  width: 30px; height: 30px;
+  border-radius: 8px; border: none;
+  background: transparent; cursor: pointer;
+  color: var(--accent); font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s;
+  font-family: var(--font);
+  line-height: 1;
+}
+.cal-arrow:hover { background: var(--accent-light); }
+
+/* Weekday header row */
+.cal-wd-row {
+  display: grid;
+  /* KW col + 7 day cols */
+  grid-template-columns: 32px repeat(7, 1fr);
+  background: var(--surface);
+  border-bottom: 0.5px solid var(--border2);
+  flex-shrink: 0;
+}
+
+.cal-wd-kw {
+  font-size: 10px; font-weight: 500;
+  color: var(--text3); text-align: center;
+  padding: 6px 0 5px;
+  letter-spacing: 0.04em;
+}
+
+.cal-wd-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--text3); text-align: center;
+  padding: 6px 0 5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Calendar grid body */
+.cal-grid-body {
+  flex: 1; overflow-y: auto;
+  background: var(--bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+
+.cal-week-row {
+  display: grid;
+  grid-template-columns: 32px repeat(7, 1fr);
+  border-bottom: 0.5px solid var(--border);
+  min-height: 80px;
+}
+.cal-week-row:last-child { border-bottom: none; }
+
+/* KW number cell */
+.cal-kw-cell {
+  font-size: 10px; color: var(--text3); font-weight: 500;
+  text-align: center; padding-top: 10px;
+  border-right: 0.5px solid var(--border);
+  background: var(--surface);
+  user-select: none;
+}
+
+/* Day cell */
+.cal-day {
+  background: var(--surface);
+  border-right: 0.5px solid var(--border);
+  padding: 7px 5px 6px;
+  display: flex; flex-direction: column; align-items: center;
+  cursor: default;
+  transition: background 0.12s;
+  position: relative;
+  min-width: 0;
+}
+.cal-day:last-child { border-right: none; }
+.cal-day.has-events { cursor: pointer; }
+.cal-day.has-events:hover { background: var(--surface2); }
+
+.cal-day.other-month { background: var(--bg); }
+.cal-day.other-month .cal-day-num { color: var(--text3); opacity: 0.5; }
+
+/* Day number circle */
+.cal-day-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 400;
+  color: var(--text);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.cal-day.today .cal-day-num {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Weekend tint on day number */
+.cal-day.weekend:not(.today) .cal-day-num { color: var(--accent); }
+.cal-day.other-month.weekend .cal-day-num { color: var(--accent); opacity: 0.35; }
+
+/* Holiday day tint */
+.cal-day.is-holiday:not(.other-month) { background: rgba(192,57,43,0.03); }
+[data-theme="dark"] .cal-day.is-holiday:not(.other-month) { background: rgba(255,69,58,0.06); }
+
+/* Event dots row */
+.cal-dots {
+  display: flex; gap: 3px;
+  justify-content: center;
+  margin-top: 5px;
+  flex-wrap: wrap;
+  max-width: 36px;
+}
+
+.cal-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Legend */
+.cal-legend {
+  display: flex; flex-wrap: wrap; gap: 10px 18px;
+  padding: 10px 24px 12px;
+  background: var(--surface);
+  border-top: 0.5px solid var(--border);
+  flex-shrink: 0;
+}
+
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text2);
+}
+
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ─── EVENT POPUP ─── */
+.ev-popup {
+  display: none; position: fixed;
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 14px;
+  padding: 13px 16px 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(0,0,0,0.06);
+  z-index: 200;
+  min-width: 200px; max-width: 250px;
+}
+.ev-popup.open { display: block; }
+
+.ev-popup-date {
+  font-size: 11px; color: var(--text3);
+  letter-spacing: 0.04em; text-transform: uppercase;
+  margin-bottom: 9px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.ev-popup-close {
+  cursor: pointer; color: var(--text3);
+  font-size: 18px; line-height: 1;
+  background: none; border: none; padding: 0;
+  font-family: var(--font);
+}
+.ev-popup-close:hover { color: var(--text); }
+
+.ev-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 6px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.ev-item:last-child { border-bottom: none; }
+
+.ev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ev-name { font-size: 13px; color: var(--text); line-height: 1.4; }
+
+/* ═══════════════════════════════
+   NEWS
+═══════════════════════════════ */
+.news-wrap {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+}
+
+.news-source-block { margin-bottom: 24px; }
+
+.source-header {
+  font-size: 10px; font-weight: 600;
+  color: var(--text3); letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.source-header::after {
+  content: ''; flex: 1; height: 0.5px; background: var(--border2);
+}
+
+.news-list { display: flex; flex-direction: column; gap: 6px; }
+
+.news-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, background 0.15s;
+  display: flex; gap: 11px; align-items: flex-start;
+}
+.news-card:hover { box-shadow: var(--shadow-sm); background: var(--surface2); }
+
+.news-source-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 5px;
+}
+
+.news-title { font-size: 14px; line-height: 1.5; color: var(--text); font-weight: 400; }
+.news-date  { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+.news-empty { font-size: 13px; color: var(--text3); text-align: center; padding: 40px 0; }
+
+/* ═══════════════════════════════
+   NOTES
+═══════════════════════════════ */
+.notes-body {
+  flex: 1; overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 16px 24px;
+}
+
+.note-card {
+  flex: 1; display: flex; flex-direction: column;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.note-textarea {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: var(--font); font-size: 15px; line-height: 1.8;
+  color: var(--text); resize: none; caret-color: var(--accent);
+}
+.note-textarea::placeholder { color: var(--text3); }
+
+.note-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 10px; border-top: 0.5px solid var(--border); margin-top: 8px;
+}
+
+.note-chars { font-size: 12px; color: var(--text3); }
+
+.note-clear-btn {
+  font-size: 12px; color: var(--text3);
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font); padding: 3px 8px; border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+.note-clear-btn:hover { background: var(--surface2); color: var(--accent); }
+
+/* ═══════════════════════════════
+   SETTINGS
+═══════════════════════════════ */
+.settings-body {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  scrollbar-width: thin;
+}
+
+.settings-group {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-group-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--text3);
+  padding: 11px 16px 9px;
+  border-bottom: 0.5px solid var(--border);
+  background: var(--surface2);
+}
+
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 0.5px solid var(--border);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-label { font-size: 14px; color: var(--text); }
+.settings-sub   { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+/* Toggle */
+.toggle {
+  width: 42px; height: 24px; border-radius: 12px;
+  background: var(--surface3); border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on { background: var(--accent); }
+.toggle::after {
+  content: ''; position: absolute;
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  top: 3px; left: 3px; transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform: translateX(18px); }
+
+/* Segmented */
+.seg {
+  display: flex; background: var(--surface2);
+  border: 0.5px solid var(--border2); border-radius: 9px; padding: 2px; gap: 1px;
+}
+.seg-opt {
+  padding: 5px 12px; font-size: 13px; font-family: var(--font);
+  color: var(--text2); background: transparent; border: none; cursor: pointer;
+  border-radius: 7px; transition: background 0.12s, color 0.12s; font-weight: 400;
+}
+.seg-opt.active {
+  background: var(--surface); color: var(--text); font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Accent swatches */
+.swatches { display: flex; gap: 8px; }
+.swatch {
+  width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: transform 0.12s;
+}
+.swatch:hover { transform: scale(1.15); }
+.swatch.on { border-color: var(--text); }
+
+/* Select */
+.setting-select {
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: 8px; padding: 5px 9px;
+  font-size: 13px; color: var(--text); font-family: var(--font);
+  outline: none; cursor: pointer;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="app-name">Özgür Daily</div>
+
+  <div class="nav-group">
+    <button class="nav-btn active" id="btn-calendar" onclick="show('calendar','btn-calendar')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2.5"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+    </button>
+    <button class="nav-btn" id="btn-news" onclick="show('news','btn-news')">
+      <svg viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2-2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><line x1="16" y1="8" x2="10" y2="8"/><line x1="16" y1="12" x2="10" y2="12"/><line x1="16" y1="16" x2="12" y2="16"/></svg>
+    </button>
+    <button class="nav-btn" id="btn-notes" onclick="show('notes','btn-notes')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </button>
+    <button class="nav-btn" id="btn-settings" onclick="show('settings','btn-settings')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- ═══ CALENDAR ═══ -->
+  <section id="calendar" class="section active">
+    <div class="topbar">
+      <span class="topbar-title" id="cal-topbar-title">Kalender</span>
+      <div class="topbar-right">
+        <button class="pill-btn" id="btn-today" onclick="goToday()">Heute</button>
+      </div>
+    </div>
+
+    <div class="cal-outer">
+      <!-- Month nav bar -->
+      <div class="cal-nav-bar">
+        <span class="cal-month-label" id="cal-month-label"></span>
+        <div class="cal-arrow-group">
+          <button class="cal-arrow" onclick="changeMonth(-1)">&#8249;</button>
+          <button class="cal-arrow" onclick="changeMonth(1)">&#8250;</button>
+        </div>
+      </div>
+
+      <!-- Weekday labels -->
+      <div class="cal-wd-row" id="cal-wd-row"></div>
+
+      <!-- Grid -->
+      <div class="cal-grid-body" id="cal-grid-body"></div>
+
+      <!-- Legend -->
+      <div class="cal-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span id="leg-de-tr">DE+TR Feiertag</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dot-de)"></div><span id="leg-de-only">Nur Deutschland</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dot-tr)"></div><span id="leg-tr-only">Nur Türkei</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dot-ev)"></div><span id="leg-ev">Ereignis</span></div>
+      </div>
+    </div>
+
+    <!-- Event popup -->
+    <div class="ev-popup" id="evPopup">
+      <div class="ev-popup-date">
+        <span id="evPopupDate"></span>
+        <button class="ev-popup-close" onclick="closePopup()">×</button>
+      </div>
+      <div id="evPopupContent"></div>
+    </div>
+  </section>
+
+  <!-- ═══ NEWS ═══ -->
+  <section id="news" class="section">
+    <div class="topbar">
+      <span class="topbar-title" id="news-topbar-title">Nachrichten</span>
+      <div class="topbar-right">
+        <span class="topbar-meta" id="news-time"></span>
+        <button class="pill-btn" onclick="loadAllNews()">↺ <span id="lbl-refresh">Aktualisieren</span></button>
+      </div>
+    </div>
+    <div class="news-wrap" id="news-wrap">
+      <div class="news-empty" id="news-loading">Lädt…</div>
+    </div>
+  </section>
+
+  <!-- ═══ NOTES ═══ -->
+  <section id="notes" class="section">
+    <div class="topbar">
+      <span class="topbar-title" id="notes-topbar-title">Notizen</span>
+      <span class="topbar-meta" id="notes-date"></span>
+    </div>
+    <div class="notes-body">
+      <div class="note-card">
+        <textarea class="note-textarea" id="noteArea" placeholder="Gedanken festhalten…"></textarea>
+        <div class="note-footer">
+          <span class="note-chars" id="noteChars">0 Zeichen</span>
+          <button class="note-clear-btn" onclick="clearNote()" id="btn-clear">Löschen</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SETTINGS ═══ -->
+  <section id="settings" class="section">
+    <div class="topbar">
+      <span class="topbar-title" id="settings-topbar-title">Einstellungen</span>
+    </div>
+    <div class="settings-body">
+
+      <!-- Appearance -->
+      <div class="settings-group">
+        <div class="settings-group-title" id="sg-appearance">Erscheinungsbild</div>
+        <div class="settings-row">
+          <div><div class="settings-label" id="sl-theme">Design</div><div class="settings-sub" id="ss-theme">Hell oder Dunkel</div></div>
+          <div class="seg" id="seg-theme">
+            <button class="seg-opt active" id="seg-light" onclick="setTheme('light')">Hell</button>
+            <button class="seg-opt" id="seg-dark"  onclick="setTheme('dark')">Dunkel</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label" id="sl-accent">Akzentfarbe</div>
+          <div class="swatches">
+            <div class="swatch on"  style="background:#c0392b" onclick="setAccent('#c0392b','rgba(192,57,43,0.09)')"></div>
+            <div class="swatch"     style="background:#2563eb" onclick="setAccent('#2563eb','rgba(37,99,235,0.09)')"></div>
+            <div class="swatch"     style="background:#16a34a" onclick="setAccent('#16a34a','rgba(22,163,74,0.09)')"></div>
+            <div class="swatch"     style="background:#7c3aed" onclick="setAccent('#7c3aed','rgba(124,58,237,0.09)')"></div>
+            <div class="swatch"     style="background:#d97706" onclick="setAccent('#d97706','rgba(217,119,6,0.09)')"></div>
+            <div class="swatch"     style="background:#0891b2" onclick="setAccent('#0891b2','rgba(8,145,178,0.09)')"></div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label" id="sl-fontsize">Schriftgröße</div>
+          <select class="setting-select" id="sel-fontsize" onchange="setFontSize(this.value)">
+            <option value="13">Klein</option>
+            <option value="15" selected>Normal</option>
+            <option value="17">Groß</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Language -->
+      <div class="settings-group">
+        <div class="settings-group-title" id="sg-lang">Sprache</div>
+        <div class="settings-row">
+          <div class="settings-label" id="sl-lang">Anzeigesprache</div>
+          <div class="seg">
+            <button class="seg-opt active" id="lang-de" onclick="setLang('de')">Deutsch</button>
+            <button class="seg-opt" id="lang-en" onclick="setLang('en')">English</button>
+            <button class="seg-opt" id="lang-tr" onclick="setLang('tr')">Türkçe</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar settings -->
+      <div class="settings-group">
+        <div class="settings-group-title" id="sg-cal">Kalender</div>
+        <div class="settings-row">
+          <div class="settings-label" id="sl-de-hol">Deutsche Feiertage</div>
+          <button class="toggle on" id="tog-de" onclick="toggleS('de_holidays',this)"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label" id="sl-tr-hol">Türkische Feiertage</div>
+          <button class="toggle on" id="tog-tr" onclick="toggleS('tr_holidays',this)"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label" id="sl-kw">Kalenderwochen</div>
+          <button class="toggle on" id="tog-kw" onclick="toggleS('show_kw',this)"></button>
+        </div>
+      </div>
+
+      <!-- News sources -->
+      <div class="settings-group">
+        <div class="settings-group-title" id="sg-news">Nachrichtenquellen</div>
+        <div class="settings-row">
+          <div><div class="settings-label">Deutsche Welle</div><div class="settings-sub">rss.dw.com</div></div>
+          <button class="toggle on" id="tog-dw" onclick="toggleS('src_dw',this)"></button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">tagesschau.de</div><div class="settings-sub">tagesschau.de/xml/rss2</div></div>
+          <button class="toggle on" id="tog-taz" onclick="toggleS('src_taz',this)"></button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">BBC World News</div><div class="settings-sub">feeds.bbci.co.uk</div></div>
+          <button class="toggle" id="tog-bbc" onclick="toggleS('src_bbc',this)"></button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label">Hürriyet</div><div class="settings-sub">hurriyet.com.tr/rss</div></div>
+          <button class="toggle" id="tog-hurr" onclick="toggleS('src_hurr',this)"></button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-label" id="sl-auto">Auto-Aktualisierung</div><div class="settings-sub" id="ss-auto">Alle 10 Minuten</div></div>
+          <button class="toggle on" id="tog-auto" onclick="toggleS('auto_refresh',this)"></button>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-group">
+        <div class="settings-group-title" id="sg-about">Über</div>
+        <div class="settings-row">
+          <div class="settings-label" style="color:var(--text2);font-size:13px;">
+            Özgür Daily &mdash; Version 2.1<br>
+            <span style="font-size:11px;color:var(--text3)">Freie tägliche Informationsplattform</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ══════════ STATE ══════════ */
+const S = {
+  lang:'de', theme:'light', accent:'#c0392b', accentLight:'rgba(192,57,43,0.09)',
+  fontSize:15, de_holidays:true, tr_holidays:true, show_kw:true,
+  src_dw:true, src_taz:true, src_bbc:false, src_hurr:false, auto_refresh:true
+};
+(function(){try{Object.assign(S,JSON.parse(localStorage.getItem('od_state')||'{}'));}catch(e){}})();
+function save(){try{localStorage.setItem('od_state',JSON.stringify(S));}catch(e){}}
+
+/* ══════════ TRANSLATIONS ══════════ */
+const TX = {
+  de:{
+    calendar:'Kalender', news:'Nachrichten', notes:'Notizen', settings:'Einstellungen',
+    today:'Heute', refresh:'Aktualisieren', loading:'Lädt…', noNews:'Keine Nachrichten verfügbar.',
+    chars:n=>n===1?'1 Zeichen':n+' Zeichen', clear:'Löschen',
+    appearance:'Erscheinungsbild', language:'Sprache', langLabel:'Anzeigesprache',
+    theme:'Design', themeHint:'Hell oder Dunkel', light:'Hell', dark:'Dunkel',
+    accentColor:'Akzentfarbe', fontSize:'Schriftgröße',
+    calSec:'Kalender', deHol:'Deutsche Feiertage', trHol:'Türkische Feiertage', kw:'Kalenderwochen',
+    newsSec:'Nachrichtenquellen', autoRef:'Auto-Aktualisierung', autoHint:'Alle 10 Minuten', about:'Über',
+    placeholder:'Gedanken festhalten…',
+    kwLabel:'KW',
+    legDeTr:'DE+TR Feiertag', legDeOnly:'Nur Deutschland', legTrOnly:'Nur Türkei', legEv:'Ereignis',
+    wd:['Mo','Di','Mi','Do','Fr','Sa','So'],
+    months:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+  },
+  en:{
+    calendar:'Calendar', news:'News', notes:'Notes', settings:'Settings',
+    today:'Today', refresh:'Refresh', loading:'Loading…', noNews:'No news available.',
+    chars:n=>n===1?'1 character':n+' characters', clear:'Clear',
+    appearance:'Appearance', language:'Language', langLabel:'Display language',
+    theme:'Theme', themeHint:'Light or Dark', light:'Light', dark:'Dark',
+    accentColor:'Accent color', fontSize:'Font size',
+    calSec:'Calendar', deHol:'German holidays', trHol:'Turkish holidays', kw:'Week numbers',
+    newsSec:'News sources', autoRef:'Auto-refresh', autoHint:'Every 10 minutes', about:'About',
+    placeholder:'Capture your thoughts…',
+    kwLabel:'W',
+    legDeTr:'Holiday (DE+TR)', legDeOnly:'Germany only', legTrOnly:'Turkey only', legEv:'Event',
+    wd:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+  },
+  tr:{
+    calendar:'Takvim', news:'Haberler', notes:'Notlar', settings:'Ayarlar',
+    today:'Bugün', refresh:'Yenile', loading:'Yükleniyor…', noNews:'Haber bulunamadı.',
+    chars:n=>n===1?'1 karakter':n+' karakter', clear:'Temizle',
+    appearance:'Görünüm', language:'Dil', langLabel:'Görüntüleme dili',
+    theme:'Tema', themeHint:'Açık veya Koyu', light:'Açık', dark:'Koyu',
+    accentColor:'Vurgu rengi', fontSize:'Yazı boyutu',
+    calSec:'Takvim', deHol:'Alman tatilleri', trHol:'Türk tatilleri', kw:'Hafta numaraları',
+    newsSec:'Haber kaynakları', autoRef:'Otomatik yenileme', autoHint:'Her 10 dakikada', about:'Hakkında',
+    placeholder:'Düşüncelerini yaz…',
+    kwLabel:'H',
+    legDeTr:'Tatil (DE+TR)', legDeOnly:'Yalnız Almanya', legTrOnly:'Yalnız Türkiye', legEv:'Etkinlik',
+    wd:['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'],
+    months:['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
+  }
+};
+const t = k => (TX[S.lang]||TX.de)[k];
+
+/* ══════════ HOLIDAYS ══════════ */
+// type: 'de' | 'tr' | 'both' | 'event'
+const H = {};
+function h(date,de,en,tr,type){if(!H[date])H[date]=[];H[date].push({de,en,tr,type});}
+
+// ── DE 2026 ──
+h('2026-01-01','Neujahr','New Year\'s Day','Yılbaşı','de');
+h('2026-01-06','Heilige Drei Könige','Epiphany','Üç Bilge Adam Günü','de');
+h('2026-04-03','Karfreitag','Good Friday','Kutsal Cuma','de');
+h('2026-04-05','Ostersonntag','Easter Sunday','Paskalya Pazar','de');
+h('2026-04-06','Ostermontag','Easter Monday','Paskalya Pazartesi','de');
+h('2026-05-01','Tag der Arbeit','Labour Day','İşçi Bayramı','de');
+h('2026-05-14','Christi Himmelfahrt','Ascension Day','Göğe Çıkış','de');
+h('2026-05-24','Pfingstsonntag','Whit Sunday','Pentekost Pazar','de');
+h('2026-05-25','Pfingstmontag','Whit Monday','Pentekost Pazartesi','de');
+h('2026-06-04','Fronleichnam','Corpus Christi','Kutsal Vücut Bayramı','de');
+h('2026-08-15','Mariä Himmelfahrt','Assumption','Meryem\'in Göğe Alınması','de');
+h('2026-10-03','Tag der Deutschen Einheit','German Unity Day','Alman Birlik Günü','de');
+h('2026-10-31','Reformationstag','Reformation Day','Reform Günü','de');
+h('2026-11-01','Allerheiligen','All Saints\'','Azizler Günü','de');
+h('2026-11-18','Buß- und Bettag','Repentance Day','Tövbe Günü','de');
+h('2026-12-25','1. Weihnachtstag','Christmas Day','Noel (1. Gün)','de');
+h('2026-12-26','2. Weihnachtstag','Boxing Day','Noel (2. Gün)','de');
+
+// ── TR 2026 ──
+h('2026-01-01','Neujahr','New Year\'s Day','Yılbaşı','tr');
+h('2026-03-20','Ramazan Arife','Eid al-Fitr Eve','Ramazan Arife','tr');
+h('2026-03-21','Ramazan Bayramı 1','Eid al-Fitr 1','Ramazan Bayramı 1. Gün','tr');
+h('2026-03-22','Ramazan Bayramı 2','Eid al-Fitr 2','Ramazan Bayramı 2. Gün','tr');
+h('2026-03-23','Ramazan Bayramı 3','Eid al-Fitr 3','Ramazan Bayramı 3. Gün','tr');
+h('2026-04-23','Nationales Unabhängigkeitsfest','National Sovereignty Day','Ulusal Egemenlik ve Çocuk Bayramı','tr');
+h('2026-05-01','Tag der Arbeit','Labour Day','İşçi Bayramı','tr');
+h('2026-05-19','Atatürk-Gedenktag','Atatürk Memorial Day','Atatürk\'ü Anma Günü','tr');
+h('2026-05-27','Kurban Arife','Eid al-Adha Eve','Kurban Arife','tr');
+h('2026-05-28','Kurban Bayramı 1','Eid al-Adha 1','Kurban Bayramı 1. Gün','tr');
+h('2026-05-29','Kurban Bayramı 2','Eid al-Adha 2','Kurban Bayramı 2. Gün','tr');
+h('2026-05-30','Kurban Bayramı 3','Eid al-Adha 3','Kurban Bayramı 3. Gün','tr');
+h('2026-05-31','Kurban Bayramı 4','Eid al-Adha 4','Kurban Bayramı 4. Gün','tr');
+h('2026-07-15','Demokratietag','Democracy Day','Demokrasi ve Millî Birlik Günü','tr');
+h('2026-08-30','Siegesfest','Victory Day','Zafer Bayramı','tr');
+h('2026-10-29','Republikfest','Republic Day','Cumhuriyet Bayramı','tr');
+
+// ── DE 2027 ──
+h('2027-01-01','Neujahr','New Year\'s Day','Yılbaşı','de');
+h('2027-04-02','Karfreitag','Good Friday','Kutsal Cuma','de');
+h('2027-04-04','Ostersonntag','Easter Sunday','Paskalya Pazar','de');
+h('2027-04-05','Ostermontag','Easter Monday','Paskalya Pazartesi','de');
+h('2027-05-01','Tag der Arbeit','Labour Day','İşçi Bayramı','de');
+h('2027-05-13','Christi Himmelfahrt','Ascension Day','Göğe Çıkış','de');
+h('2027-05-23','Pfingstsonntag','Whit Sunday','Pentekost Pazar','de');
+h('2027-05-24','Pfingstmontag','Whit Monday','Pentekost Pazartesi','de');
+h('2027-10-03','Tag der Deutschen Einheit','German Unity Day','Alman Birlik Günü','de');
+h('2027-12-25','1. Weihnachtstag','Christmas Day','Noel (1. Gün)','de');
+h('2027-12-26','2. Weihnachtstag','Boxing Day','Noel (2. Gün)','de');
+h('2027-04-23','Nationales Unabhängigkeitsfest','National Sovereignty Day','Ulusal Egemenlik ve Çocuk Bayramı','tr');
+h('2027-05-19','Atatürk-Gedenktag','Atatürk Memorial Day','Atatürk\'ü Anma Günü','tr');
+h('2027-08-30','Siegesfest','Victory Day','Zafer Bayramı','tr');
+h('2027-10-29','Republikfest','Republic Day','Cumhuriyet Bayramı','tr');
+
+// ── Events ──
+h('2026-02-14','Valentinstag','Valentine\'s Day','Sevgililer Günü','event');
+h('2026-03-08','Internationaler Frauentag','Women\'s Day','Dünya Kadınlar Günü','event');
+h('2026-04-22','Earth Day','Earth Day','Dünya Günü','event');
+h('2026-06-21','Sommersonnenwende','Summer Solstice','Yaz Gündönümü','event');
+h('2026-10-31','Halloween','Halloween','Cadılar Bayramı','event');
+h('2026-11-11','Karneval (11.11)','Carnival Start','Karnaval Başlangıcı','event');
+h('2026-12-06','Nikolaustag','St. Nicholas Day','Noel Baba Günü','event');
+h('2026-12-24','Heiligabend','Christmas Eve','Noel Gecesi','event');
+h('2026-12-31','Silvester','New Year\'s Eve','Yılbaşı Gecesi','event');
+
+function eventsForDay(y,m,d){
+  const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  return (H[key]||[]).filter(e=>{
+    if(e.type==='de'&&!S.de_holidays)return false;
+    if(e.type==='tr'&&!S.tr_holidays)return false;
+    return true;
+  });
+}
+function evName(e){return S.lang==='en'?e.en:S.lang==='tr'?e.tr:e.de;}
+function evColor(e){
+  if(e.type==='de') return 'var(--dot-de)';
+  if(e.type==='tr') return 'var(--dot-tr)';
+  if(e.type==='event') return 'var(--dot-ev)';
+  return 'var(--accent)';
+}
+
+/* ══════════ CALENDAR ══════════ */
+let calDate = new Date(2026,0,1);
+
+function getKW(d){
+  const dt=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=dt.getUTCDay()||7;
+  dt.setUTCDate(dt.getUTCDate()+4-day);
+  const y0=new Date(Date.UTC(dt.getUTCFullYear(),0,1));
+  return Math.ceil(((dt-y0)/86400000+1)/7);
+}
+
+function renderCalendar(){
+  const L=TX[S.lang];
+  const y=calDate.getFullYear(), mo=calDate.getMonth();
+  const today=new Date();
+  document.getElementById('cal-month-label').textContent=L.months[mo]+' '+y;
+
+  // Weekday header
+  const wdRow=document.getElementById('cal-wd-row');
+  wdRow.style.gridTemplateColumns=S.show_kw?'32px repeat(7,1fr)':'repeat(7,1fr)';
+  wdRow.innerHTML='';
+  if(S.show_kw){
+    const kh=document.createElement('div');
+    kh.className='cal-wd-kw'; kh.textContent=L.kwLabel;
+    wdRow.appendChild(kh);
+  }
+  L.wd.forEach(w=>{
+    const el=document.createElement('div'); el.className='cal-wd-label'; el.textContent=w;
+    wdRow.appendChild(el);
+  });
+
+  // Grid
+  const body=document.getElementById('cal-grid-body');
+  body.innerHTML='';
+
+  const firstDow=(new Date(y,mo,1).getDay()+6)%7; // Mon=0
+  const daysInMo=new Date(y,mo+1,0).getDate();
+  const daysInPrev=new Date(y,mo,0).getDate();
+
+  let cells=[];
+  for(let i=firstDow-1;i>=0;i--) cells.push({d:daysInPrev-i,m:mo-1,y:mo===0?y-1:y,other:true});
+  for(let d=1;d<=daysInMo;d++) cells.push({d,m:mo,y,other:false});
+  while(cells.length%7!==0){const ex=cells.length-daysInMo-firstDow+1;cells.push({d:ex,m:mo+1,y:mo===11?y+1:y,other:true});}
+
+  const cols=S.show_kw?'32px repeat(7,1fr)':'repeat(7,1fr)';
+
+  for(let w=0;w<cells.length/7;w++){
+    const week=cells.slice(w*7,w*7+7);
+    const row=document.createElement('div');
+    row.className='cal-week-row';
+    row.style.gridTemplateColumns=cols;
+
+    // KW cell
+    if(S.show_kw){
+      const kwc=document.createElement('div'); kwc.className='cal-kw-cell';
+      const refC=week.find(c=>!c.other)||week[0];
+      kwc.textContent=getKW(new Date(refC.y,refC.m,refC.d));
+      row.appendChild(kwc);
+    }
+
+    week.forEach((cell,ci)=>{
+      const dc=document.createElement('div'); dc.className='cal-day';
+      if(cell.other) dc.classList.add('other-month');
+      const isWeekend=ci===5||ci===6;
+      if(isWeekend) dc.classList.add('weekend');
+
+      const isTod=!cell.other&&cell.d===today.getDate()&&cell.m===today.getMonth()&&cell.y===today.getFullYear();
+      if(isTod) dc.classList.add('today');
+
+      const evs=cell.other?[]:eventsForDay(cell.y,cell.m,cell.d);
+      const hasHol=evs.some(e=>e.type==='de'||e.type==='tr');
+      if(hasHol&&!cell.other) dc.classList.add('is-holiday');
+
+      // Day number
+      const num=document.createElement('div'); num.className='cal-day-num'; num.textContent=cell.d;
+      dc.appendChild(num);
+
+      // Dots only — NO event names
+      if(!cell.other&&evs.length>0){
+        dc.classList.add('has-events');
+        const dotsEl=document.createElement('div'); dotsEl.className='cal-dots';
+        evs.forEach(e=>{
+          const dot=document.createElement('div'); dot.className='cal-dot';
+          dot.style.background=evColor(e);
+          dotsEl.appendChild(dot);
+        });
+        dc.appendChild(dotsEl);
+        dc.addEventListener('click',ev=>{ev.stopPropagation();showPopup(ev,cell,evs);});
+      }
+
+      row.appendChild(dc);
+    });
+
+    body.appendChild(row);
+  }
+
+  // Legend texts
+  document.getElementById('leg-de-tr').textContent=t('legDeTr');
+  document.getElementById('leg-de-only').textContent=t('legDeOnly');
+  document.getElementById('leg-tr-only').textContent=t('legTrOnly');
+  document.getElementById('leg-ev').textContent=t('legEv');
+}
+
+function changeMonth(v){ calDate=new Date(calDate.getFullYear(),calDate.getMonth()+v,1); renderCalendar(); }
+function goToday(){ calDate=new Date(); renderCalendar(); }
+
+function showPopup(mouseEv,cell,evs){
+  const popup=document.getElementById('evPopup');
+  const L=TX[S.lang];
+  document.getElementById('evPopupDate').textContent=
+    cell.d+'. '+L.months[cell.m]+' '+cell.y;
+  const content=document.getElementById('evPopupContent');
+  content.innerHTML='';
+  evs.forEach(e=>{
+    const item=document.createElement('div'); item.className='ev-item';
+    item.innerHTML=`<div class="ev-dot" style="background:${evColor(e)}"></div><div class="ev-name">${esc(evName(e))}</div>`;
+    content.appendChild(item);
+  });
+  // Position popup near click
+  const x=Math.min(mouseEv.clientX+4, window.innerWidth-270);
+  const y=Math.min(mouseEv.clientY+4, window.innerHeight-200);
+  popup.style.left=x+'px'; popup.style.top=y+'px';
+  popup.classList.add('open');
+}
+
+function closePopup(){ document.getElementById('evPopup').classList.remove('open'); }
+document.addEventListener('click', closePopup);
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ══════════ NEWS ══════════ */
+const FEEDS={
+  src_dw:  {url:'https://rss.dw.com/xml/rss-de-top', name:'Deutsche Welle', color:'#0064b4'},
+  src_taz: {url:'https://www.tagesschau.de/xml/rss2',  name:'tagesschau.de',  color:'#003378'},
+  src_bbc: {url:'https://feeds.bbci.co.uk/news/world/rss.xml', name:'BBC World',  color:'#bb1919'},
+  src_hurr:{url:'https://www.hurriyet.com.tr/rss/gundem', name:'Hürriyet', color:'#e31e30'},
+};
+const PROXY='https://api.allorigins.win/raw?url=';
+let refreshTimer=null;
+
+async function fetchFeed(key){
+  try{
+    const res=await fetch(PROXY+encodeURIComponent(FEEDS[key].url),{signal:AbortSignal.timeout(9000)});
+    if(!res.ok) throw 0;
+    const xml=new DOMParser().parseFromString(await res.text(),'text/xml');
+    return Array.from(xml.querySelectorAll('item')).slice(0,6).map(i=>({
+      title:i.querySelector('title')?.textContent?.trim()||'',
+      link: i.querySelector('link')?.textContent?.trim()||'#',
+      date: i.querySelector('pubDate')?.textContent?.trim()||'',
+    }));
+  }catch{return null;}
+}
+
+async function loadAllNews(){
+  const wrap=document.getElementById('news-wrap');
+  wrap.innerHTML=`<div class="news-empty">${t('loading')}</div>`;
+  const keys=Object.keys(FEEDS).filter(k=>S[k]);
+  if(!keys.length){wrap.innerHTML=`<div class="news-empty">${t('noNews')}</div>`;return;}
+  const results=await Promise.all(keys.map(fetchFeed));
+  wrap.innerHTML=''; let any=false;
+  keys.forEach((key,i)=>{
+    const items=results[i]; if(!items||!items.length) return; any=true;
+    const block=document.createElement('div'); block.className='news-source-block';
+    const hdr=document.createElement('div'); hdr.className='source-header'; hdr.textContent=FEEDS[key].name;
+    block.appendChild(hdr);
+    const list=document.createElement('div'); list.className='news-list';
+    items.forEach(it=>{
+      const card=document.createElement('div'); card.className='news-card';
+      card.innerHTML=`<div class="news-source-dot" style="background:${FEEDS[key].color}"></div>
+        <div><div class="news-title">${esc(it.title)}</div><div class="news-date">${esc(it.date.slice(0,16))}</div></div>`;
+      card.addEventListener('click',()=>window.open(it.link,'_blank'));
+      list.appendChild(card);
+    });
+    block.appendChild(list); wrap.appendChild(block);
+  });
+  if(!any) wrap.innerHTML=`<div class="news-empty">${t('noNews')}</div>`;
+  const now=new Date();
+  document.getElementById('news-time').textContent=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  if(refreshTimer) clearTimeout(refreshTimer);
+  if(S.auto_refresh) refreshTimer=setTimeout(loadAllNews,10*60*1000);
+}
+
+/* ══════════ NOTES ══════════ */
+function initNotes(){
+  const ta=document.getElementById('noteArea');
+  ta.value=localStorage.getItem('od_note')||'';
+  ta.placeholder=t('placeholder');
+  updateChars();
+  ta.addEventListener('input',()=>{localStorage.setItem('od_note',ta.value);updateChars();});
+}
+function updateChars(){
+  document.getElementById('noteChars').textContent=t('chars')(document.getElementById('noteArea').value.length);
+}
+function clearNote(){
+  if(!confirm('Notiz löschen?')) return;
+  document.getElementById('noteArea').value=''; localStorage.removeItem('od_note'); updateChars();
+}
+
+/* ══════════ SETTINGS ══════════ */
+function setTheme(th){
+  S.theme=th;
+  document.documentElement.setAttribute('data-theme',th==='dark'?'dark':'');
+  document.getElementById('seg-light').classList.toggle('active',th==='light');
+  document.getElementById('seg-dark').classList.toggle('active',th==='dark');
+  save();
+}
+
+function setAccent(color,light){
+  S.accent=color; S.accentLight=light;
+  document.documentElement.style.setProperty('--accent',color);
+  document.documentElement.style.setProperty('--accent-light',light);
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on',s.style.background===color||s.getAttribute('onclick')?.includes(color)));
+  save();
+}
+
+function setFontSize(v){
+  S.fontSize=+v; document.body.style.fontSize=v+'px'; save();
+}
+
+function setLang(lang){
+  S.lang=lang;
+  ['de','en','tr'].forEach(l=>document.getElementById('lang-'+l).classList.toggle('active',l===lang));
+  applyTx(); renderCalendar(); save();
+}
+
+function toggleS(key,btn){
+  S[key]=!S[key]; btn.classList.toggle('on',S[key]); save();
+  if(key==='de_holidays'||key==='tr_holidays'||key==='show_kw') renderCalendar();
+}
+
+function applyTx(){
+  document.getElementById('cal-topbar-title').textContent=t('calendar');
+  document.getElementById('news-topbar-title').textContent=t('news');
+  document.getElementById('notes-topbar-title').textContent=t('notes');
+  document.getElementById('settings-topbar-title').textContent=t('settings');
+  document.getElementById('btn-today').textContent=t('today');
+  document.getElementById('lbl-refresh').textContent=t('refresh');
+  document.getElementById('noteArea').placeholder=t('placeholder');
+  document.getElementById('btn-clear').textContent=t('clear');
+
+  // Settings labels
+  const ids={
+    'sg-appearance':t('appearance'),'sg-lang':t('language'),'sg-cal':t('calSec'),
+    'sg-news':t('newsSec'),'sg-about':t('about'),
+    'sl-theme':t('theme'),'ss-theme':t('themeHint'),'sl-accent':t('accentColor'),
+    'sl-fontsize':t('fontSize'),'sl-lang':t('langLabel'),
+    'sl-de-hol':t('deHol'),'sl-tr-hol':t('trHol'),'sl-kw':t('kw'),
+    'sl-auto':t('autoRef'),'ss-auto':t('autoHint'),
+    'seg-light':t('light'),'seg-dark':t('dark'),
+  };
+  Object.entries(ids).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+
+  updateChars();
+  // Notes date
+  const now=new Date(); const L=TX[S.lang];
+  document.getElementById('notes-date').textContent=now.getDate()+'. '+L.months[now.getMonth()]+' '+now.getFullYear();
+}
+
+/* ══════════ NAV ══════════ */
+function show(id,btnId){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById(btnId).classList.add('active');
+  if(id==='news') loadAllNews();
+}
+
+/* ══════════ INIT ══════════ */
+(function init(){
+  // Apply saved state
+  setTheme(S.theme);
+  document.documentElement.style.setProperty('--accent',S.accent);
+  document.documentElement.style.setProperty('--accent-light',S.accentLight);
+  document.body.style.fontSize=S.fontSize+'px';
+  document.getElementById('sel-fontsize').value=S.fontSize;
+
+  // Toggles
+  const tm={de_holidays:'tog-de',tr_holidays:'tog-tr',show_kw:'tog-kw',
+            src_dw:'tog-dw',src_taz:'tog-taz',src_bbc:'tog-bbc',src_hurr:'tog-hurr',auto_refresh:'tog-auto'};
+  Object.entries(tm).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.classList.toggle('on',S[k]);});
+
+  ['de','en','tr'].forEach(l=>document.getElementById('lang-'+l).classList.toggle('active',l===S.lang));
+  document.getElementById('seg-light').classList.toggle('active',S.theme==='light');
+  document.getElementById('seg-dark').classList.toggle('active',S.theme==='dark');
+
+  // Accent swatch
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on',s.getAttribute('onclick')?.includes(S.accent)));
+
+  applyTx();
+  initNotes();
+  renderCalendar();
+})();
+</script>
+</body>
+</html>
